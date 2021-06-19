@@ -1,39 +1,25 @@
 import React from 'react';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { Droppable, Draggable } from 'react-beautiful-dnd';
+import PropTypes from 'prop-types';
 
 import {
-  List, ListItem, ListItemText,
+  List, ListItem, ListItemText, Divider,
 } from '@material-ui/core';
-
-import { allWidgets } from '../../constants';
 
 import WidgetAreaStyles from './WidgetAreaStyles';
 
-const WidgetArea = () => {
+const WidgetArea = ({ array, droppableId }) => {
   const classes = WidgetAreaStyles();
-
-  const [widgetList, setWidgetList] = React.useState(allWidgets);
-
-  const handleOnDragEnd = (result) => {
-    if (!result.destination) return;
-
-    const items = Array.from(widgetList);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-
-    setWidgetList(items);
-  };
-
   return (
     <div className={classes.root}>
-      <DragDropContext onDragEnd={handleOnDragEnd}>
-        <Droppable droppableId="widgetList">
-          {(provided) => (
-            <List className="widgetList" {...provided.droppableProps} ref={provided.innerRef}>
-              {widgetList.map(({ id, widgetsText }, index) => (
-                <Draggable key={id} draggableId={String(id)} index={index}>
-                  {/* eslint-disable-next-line no-shadow */}
-                  {(provided) => (
+      <Droppable droppableId={droppableId}>
+        {(provided) => (
+          <List className="widgetList" {...provided.droppableProps} ref={provided.innerRef}>
+            {array.map(({ id, widgetsText }, index) => (
+              <Draggable key={`widget-${id}`} draggableId={String(id)} index={index}>
+                {/* eslint-disable-next-line no-shadow */}
+                {(provided) => (
+                  <>
                     <ListItem
                       button
                       ref={provided.innerRef}
@@ -42,16 +28,25 @@ const WidgetArea = () => {
                     >
                       <ListItemText primary={widgetsText} />
                     </ListItem>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </List>
-          )}
-        </Droppable>
-      </DragDropContext>
+                    <Divider />
+                  </>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </List>
+        )}
+      </Droppable>
     </div>
   );
+};
+
+WidgetArea.propTypes = {
+  array: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    widgetsText: PropTypes.string.isRequired,
+  })).isRequired,
+  droppableId: PropTypes.string.isRequired,
 };
 
 export default WidgetArea;
