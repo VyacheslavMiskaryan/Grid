@@ -6,21 +6,21 @@ import {
   Button, TextField, Typography, Container,
 } from '@material-ui/core';
 
-import { store } from '../../constants';
+import { gridParameters } from '../../constants';
 
 const StartPage = () => {
   const history = useHistory();
 
   const {
-    register, handleSubmit,
+    register, handleSubmit, formState: { errors },
   } = useForm();
 
   const handleCreateGrid = useCallback((data) => {
     const rows = Number(data.rows);
     const columns = Number(data.columns);
     if (rows <= 10 && columns <= 10) {
-      store.rows = rows;
-      store.columns = columns;
+      gridParameters.rows = rows;
+      gridParameters.columns = columns;
       history.push('/main_page');
     }
   }, [history]);
@@ -57,6 +57,10 @@ const StartPage = () => {
             inputProps={{ maxLength: 2 }}
             {...register('columns', { required: true, pattern: /^\d+$/ })}
           />
+          {
+            (errors.rows || errors.columns)
+            && 'Both fields are required, you only need to enter numbers. Both numbers must be less than 10'
+          }
           <Button
             type="submit"
             fullWidth

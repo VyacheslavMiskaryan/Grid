@@ -1,4 +1,4 @@
-export const store = {
+export const gridParameters = {
   rows: 0,
   columns: 0,
 };

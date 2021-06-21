@@ -1,9 +1,8 @@
-import { store } from '../constants';
+import { gridParameters } from '../constants';
 
-const getSourceData = (result) => {
-  const storeColumns = store.columns;
-
-  const sourceValue = Number(result.draggableId.slice(4));
+const getSourceData = (value) => {
+  const storeColumns = gridParameters.columns;
+  const sourceValue = Number(value);
   const sourceRow = Math.ceil(sourceValue / storeColumns);
   const sourceColumns = sourceValue - (sourceRow - 1) * storeColumns;
   return { sourceValue, sourceRow, sourceColumns };

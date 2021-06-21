@@ -1,12 +1,11 @@
-import { store } from '../constants';
+import { gridParameters } from '../constants';
 
-const getDestinationData = (result) => {
-  const storeColumns = store.columns;
-
-  const destinationValue = Number(result.destination.droppableId);
-  const destinationRow = Math.ceil(destinationValue / storeColumns);
-  const destinationColumns = destinationValue - (destinationRow - 1) * storeColumns;
-  return { destinationValue, destinationRow, destinationColumns };
+const getDestinationData = (value) => {
+  const storeColumns = gridParameters.columns;
+  const cellValue = Number(value);
+  const row = Math.ceil(cellValue / storeColumns);
+  const columns = value - (row - 1) * storeColumns;
+  return { cellValue, row, columns };
 };
 
 export default getDestinationData;

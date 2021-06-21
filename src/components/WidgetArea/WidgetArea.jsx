@@ -14,18 +14,17 @@ const WidgetArea = ({ array, droppableId }) => {
   return (
     <div className={classes.root}>
       <Droppable droppableId={droppableId}>
-        {(provided) => (
-          <List className="widgetList" {...provided.droppableProps} ref={provided.innerRef}>
+        {(providedDrop) => (
+          <List className="widgetList" {...providedDrop.droppableProps} ref={providedDrop.innerRef}>
             {array.map(({ id, widgetsText }, index) => (
               <Draggable key={`widget-${id}`} draggableId={String(id)} index={index}>
-                {/* eslint-disable-next-line no-shadow */}
-                {(provided) => (
+                {(providedDrag) => (
                   <>
                     <ListItem
                       button
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
+                      ref={providedDrag.innerRef}
+                      {...providedDrag.draggableProps}
+                      {...providedDrag.dragHandleProps}
                     >
                       <ListItemText primary={widgetsText} />
                     </ListItem>
@@ -34,7 +33,7 @@ const WidgetArea = ({ array, droppableId }) => {
                 )}
               </Draggable>
             ))}
-            {provided.placeholder}
+            {providedDrop.placeholder}
           </List>
         )}
       </Droppable>

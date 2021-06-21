@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
+import uuid from 'react-uuid';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 
 import {
@@ -14,25 +15,24 @@ const GridField = ({ gridList, gridValuesList, array }) => {
   const cellRenderer = useCallback((Array, rowIndex) => (
     <List key={`${rowIndex}`} className={classes.rowsField}>
       {Array.map((elem, index) => (
-        <Droppable key={`${rowIndex}-${elem}`} droppableId={String(elem)}>
-          {(provided) => (
+        <Droppable key={uuid()} droppableId={String(elem)}>
+          {(providedDrop) => (
             <ListItem
-              {...provided.droppableProps}
-              ref={provided.innerRef}
+              {...providedDrop.droppableProps}
+              ref={providedDrop.innerRef}
               className={classes.emptyItem}
             >
               {typeof (Array[index]) === 'number' ? (
                 <ListItemText primary="" />
               ) : (
-                <Draggable draggableId={`grid ${String(gridValuesList[rowIndex][index])}`} index={index}>
-                  {/* eslint-disable-next-line no-shadow */}
-                  {(provided) => (
+                <Draggable draggableId={`grid ${String(gridValuesList[rowIndex][index])}`} index={gridValuesList[rowIndex][index]}>
+                  {(providedDrag) => (
                     <ListItemText
                       className={classes.listItem}
                       primary={Array[index]}
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
+                      ref={providedDrag.innerRef}
+                      {...providedDrag.draggableProps}
+                      {...providedDrag.dragHandleProps}
                     />
                   )}
                 </Draggable>
@@ -54,8 +54,7 @@ const GridField = ({ gridList, gridValuesList, array }) => {
 };
 
 GridField.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  array: PropTypes.array.isRequired,
+  array: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.any.isRequired)).isRequired,
   gridList: PropTypes.arrayOf(PropTypes.any.isRequired).isRequired,
   gridValuesList: PropTypes.arrayOf(PropTypes.any.isRequired).isRequired,
 };
