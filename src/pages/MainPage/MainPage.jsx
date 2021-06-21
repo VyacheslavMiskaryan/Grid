@@ -1,72 +1,84 @@
-import React from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { DragDropContext } from 'react-beautiful-dnd';
 
 import WidgetArea from '../../components/WidgetArea';
 import GridField from '../../components/GridField';
 
-import { allWidgets } from '../../constants';
+import { allWidgets, store } from '../../constants';
 import getGridArray from '../../utils/getGridArray';
 import getSourceData from '../../utils/getSourceData';
 import getDestinationData from '../../utils/getDestinationData';
 
-import './MainPageStyles.css';
+import MainPageStyles from './MainPageStyles';
 
 const MainPage = () => {
+  const classes = MainPageStyles();
+
+  const history = useHistory();
+
   const gridArray = getGridArray();
 
-  const [widgetList, setWidgetList] = React.useState(allWidgets);
-  const [secondWidgetList, setSecondWidgetList] = React.useState(gridArray);
+  const [widgetList, setWidgetList] = useState(allWidgets);
+  const [gridWidgetList, setGridWidgetList] = useState(gridArray);
 
-  const handleOnDragEnd = (result) => {
+  const handleOnDragEnd = useCallback((result) => {
     const widgetsItems = Array.from(widgetList);
-    const secondWidgetsItems = Array.from(secondWidgetList);
+    const gridWidgetsItems = Array.from(gridWidgetList);
+
+    const sourceId = result.source.droppableId;
+    const destinationId = result.destination.droppableId;
+
+    const { sourceValue, sourceRow, sourceColumns } = getSourceData(result);
+    const { destinationRow, destinationColumns } = getDestinationData(result);
 
     if (!result.destination) return;
 
-    if (result.source.droppableId === 'droppableId' && result.destination.droppableId === 'droppableId') {
+    if (sourceId === 'droppableId' && destinationId === 'droppableId') {
       const [reorderedItem] = widgetsItems.splice(result.source.index, 1);
       widgetsItems.splice(result.destination.index, 0, reorderedItem);
       setWidgetList(widgetsItems);
     }
 
-    if (result.source.droppableId === 'droppableId' && result.destination.droppableId !== 'droppableId') {
-      if (Number(result.destination.droppableId)) {
-        const { destinationRow, destinationColumns } = getDestinationData(result);
-        secondWidgetsItems[destinationRow - 1][destinationColumns - 1] = widgetsItems[
-          result.source.index
-        ].widgetsText;
-        setSecondWidgetList(secondWidgetsItems);
-        widgetsItems.splice(result.source.index, 1);
-        setWidgetList(widgetsItems);
-      }
+    if (sourceId === 'droppableId' && Number(destinationId)) {
+      gridWidgetsItems[destinationRow - 1][destinationColumns - 1] = widgetsItems[
+        result.source.index
+      ].widgetsText;
+      setGridWidgetList(gridWidgetsItems);
+      widgetsItems.splice(result.source.index, 1);
+      setWidgetList(widgetsItems);
     }
 
-    if (result.source.droppableId !== 'droppableId' && result.destination.droppableId === 'droppableId') {
-      const { sourceValue, sourceRow, sourceColumns } = getSourceData(result);
-      secondWidgetsItems[sourceRow - 1][sourceColumns - 1] = sourceValue;
-      setSecondWidgetList(secondWidgetsItems);
-      const element = { id: sourceValue, widgetsText: result.source.droppableId };
+    if (sourceId !== 'droppableId' && destinationId === 'droppableId') {
+      gridWidgetsItems[sourceRow - 1][sourceColumns - 1] = sourceValue;
+      setGridWidgetList(gridWidgetsItems);
+      const element = {
+        id: Date.now(),
+        widgetsText: sourceId,
+      };
       widgetsItems.splice(result.destination.index, 0, element);
       setWidgetList(widgetsItems);
     }
 
-    if (result.source.droppableId !== 'droppableId' && result.destination.droppableId !== 'droppableId') {
-      if (Number(result.destination.droppableId)) {
-        const { sourceRow, sourceColumns } = getSourceData(result);
-        const { destinationRow, destinationColumns } = getDestinationData(result);
-        const sourceWidgetText = result.source.droppableId;
-        secondWidgetsItems[sourceRow - 1][sourceColumns - 1] = result.destination.droppableId;
-        secondWidgetsItems[destinationRow - 1][destinationColumns - 1] = sourceWidgetText;
-        setSecondWidgetList(secondWidgetsItems);
-      }
+    if (sourceId !== 'droppableId' && Number(destinationId)) {
+      const sourceWidgetText = sourceId;
+      gridWidgetsItems[sourceRow - 1][sourceColumns - 1] = sourceValue;
+      gridWidgetsItems[destinationRow - 1][destinationColumns - 1] = sourceWidgetText;
+      setGridWidgetList(gridWidgetsItems);
     }
-  };
+  }, [gridWidgetList, widgetList]);
+
+  useEffect(() => {
+    if (store.rows <= 0 || store.columns <= 0) {
+      history.push('/');
+    }
+  }, [history]);
 
   return (
-    <div className="main-container">
+    <div className={classes.mainContainer}>
       <DragDropContext onDragEnd={handleOnDragEnd}>
         <WidgetArea droppableId="droppableId" array={widgetList} />
-        <GridField gridList={gridArray} anotherList={gridArray} array={secondWidgetList} />
+        <GridField gridList={gridArray} gridValuesList={gridArray} array={gridWidgetList} />
       </DragDropContext>
     </div>
   );

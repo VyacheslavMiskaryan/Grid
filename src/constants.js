@@ -1,5 +1,7 @@
-export const COLUMNS = 6;
-export const ROWS = 3;
+export const store = {
+  rows: 0,
+  columns: 0,
+};
 
 export const allWidgets = [
   {

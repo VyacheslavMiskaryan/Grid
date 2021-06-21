@@ -11,17 +11,24 @@ const GridFieldStyles = makeStyles(() => ({
     minHeight: 600,
     backgroundColor: colorSet.background,
     display: 'flex',
-    flexWrap: 'wrap',
+    flexDirection: 'column',
   },
   listItem: {
-    width: 150,
-    height: 200,
+    '& span': {
+      fontSize: 14,
+      wordBreak: 'break-all',
+    },
   },
   emptyItem: {
     margin: 5,
-    width: 140,
-    height: 180,
+    padding: 4,
+    width: '15%',
+    height: '100%',
+    minHeight: 100,
     backgroundColor: colorSet.secondBackground,
+  },
+  rowsField: {
+    display: 'flex',
   },
 }));
 

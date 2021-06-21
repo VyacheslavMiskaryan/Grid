@@ -5,7 +5,7 @@ import colorSet from '../../colors';
 const WidgetAreaStyles = makeStyles(() => ({
   root: {
     width: '100%',
-    maxWidth: 200,
+    maxWidth: '15%',
     height: 830,
     overflow: 'auto',
     backgroundColor: colorSet.background,

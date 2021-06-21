@@ -10,6 +10,7 @@ import WidgetAreaStyles from './WidgetAreaStyles';
 
 const WidgetArea = ({ array, droppableId }) => {
   const classes = WidgetAreaStyles();
+
   return (
     <div className={classes.root}>
       <Droppable droppableId={droppableId}>
@@ -49,4 +50,4 @@ WidgetArea.propTypes = {
   droppableId: PropTypes.string.isRequired,
 };
 
-export default WidgetArea;
+export default React.memo(WidgetArea);
