@@ -1,9 +1,4 @@
-export const gridParameters = {
-  rows: 0,
-  columns: 0,
-};
-
-export const allWidgets = [
+const allWidgets = [
   {
     id: 1,
     widgetsText: 'widget1',
@@ -77,3 +72,5 @@ export const allWidgets = [
     widgetsText: 'widget18',
   },
 ];
+
+export default allWidgets;

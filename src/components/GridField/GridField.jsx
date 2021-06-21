@@ -25,7 +25,7 @@ const GridField = ({ gridList, gridValuesList, array }) => {
               {typeof (Array[index]) === 'number' ? (
                 <ListItemText primary="" />
               ) : (
-                <Draggable draggableId={`grid ${String(gridValuesList[rowIndex][index])}`} index={gridValuesList[rowIndex][index]}>
+                <Draggable draggableId={`grid ${String(gridValuesList[rowIndex][index])}`} index={Number(gridValuesList[rowIndex][index])}>
                   {(providedDrag) => (
                     <ListItemText
                       className={classes.listItem}

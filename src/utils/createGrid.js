@@ -1,8 +1,6 @@
-import { gridParameters } from '../constants';
-
 const createGrid = () => {
-  const { rows, columns } = gridParameters;
-  console.log('step!!!');
+  const rows = Number(sessionStorage.getItem('rows'));
+  const columns = Number(sessionStorage.getItem('columns'));
   const gridRows = [];
   const gridArray = [];
   for (let i = 1; i <= columns * rows; i += 1) {

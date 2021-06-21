@@ -6,8 +6,6 @@ import {
   Button, TextField, Typography, Container,
 } from '@material-ui/core';
 
-import { gridParameters } from '../../constants';
-
 const StartPage = () => {
   const history = useHistory();
 
@@ -19,8 +17,8 @@ const StartPage = () => {
     const rows = Number(data.rows);
     const columns = Number(data.columns);
     if (rows <= 10 && columns <= 10) {
-      gridParameters.rows = rows;
-      gridParameters.columns = columns;
+      sessionStorage.setItem('rows', rows);
+      sessionStorage.setItem('columns', columns);
       history.push('/main_page');
     }
   }, [history]);
@@ -63,7 +61,6 @@ const StartPage = () => {
           }
           <Button
             type="submit"
-            fullWidth
             variant="contained"
             color="primary"
           >

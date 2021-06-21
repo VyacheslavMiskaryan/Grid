@@ -1,10 +1,8 @@
-import { gridParameters } from '../constants';
-
 const getSourceData = (value) => {
-  const storeColumns = gridParameters.columns;
+  const columns = Number(sessionStorage.getItem('columns'));
   const sourceValue = Number(value);
-  const sourceRow = Math.ceil(sourceValue / storeColumns);
-  const sourceColumns = sourceValue - (sourceRow - 1) * storeColumns;
+  const sourceRow = Math.ceil(sourceValue / columns);
+  const sourceColumns = sourceValue - (sourceRow - 1) * columns;
   return { sourceValue, sourceRow, sourceColumns };
 };
 

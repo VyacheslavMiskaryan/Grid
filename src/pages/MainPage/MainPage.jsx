@@ -1,13 +1,17 @@
 import React, {
-  useState, useCallback, useEffect,
+  useState, useCallback,
 } from 'react';
 import { useHistory } from 'react-router-dom';
 import { DragDropContext } from 'react-beautiful-dnd';
 
+import {
+  Button,
+} from '@material-ui/core';
+
 import WidgetArea from '../../components/WidgetArea';
 import GridField from '../../components/GridField';
 
-import { allWidgets, gridParameters } from '../../constants';
+import allWidgets from '../../constants';
 import createGrid from '../../utils/createGrid';
 import getSourceData from '../../utils/getSourceData';
 import getDestinationData from '../../utils/getDestinationData';
@@ -19,7 +23,7 @@ const MainPage = () => {
 
   const history = useHistory();
 
-  const gridArray = createGrid(gridParameters.rows, gridParameters.columns);
+  const gridArray = createGrid();
 
   const [widgetList, setWidgetList] = useState(allWidgets);
   const [gridWidgetList, setGridWidgetList] = useState(gridArray);
@@ -115,19 +119,27 @@ const MainPage = () => {
     }
   }, [gridWidgetList, widgetList]);
 
-  useEffect(() => {
-    if (gridParameters.rows <= 0 || gridParameters.columns <= 0) {
-      history.push('/');
-    }
-  }, [history]);
-
   return (
-    <div className={classes.mainContainer}>
-      <DragDropContext onDragEnd={handleOnDragEnd}>
-        <WidgetArea droppableId="droppableId" array={widgetList} />
-        <GridField gridList={gridArray} gridValuesList={gridArray} array={gridWidgetList} />
-      </DragDropContext>
-    </div>
+    <>
+      <Button
+        className={classes.clearButton}
+        fullWidth
+        variant="contained"
+        color="primary"
+        onClick={() => {
+          sessionStorage.clear();
+          history.push('/');
+        }}
+      >
+        Clear storage
+      </Button>
+      <div className={classes.mainContainer}>
+        <DragDropContext onDragEnd={handleOnDragEnd}>
+          <WidgetArea droppableId="droppableId" array={widgetList} />
+          <GridField gridList={gridArray} gridValuesList={gridArray} array={gridWidgetList} />
+        </DragDropContext>
+      </div>
+    </>
   );
 };
 
